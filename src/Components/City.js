@@ -3,7 +3,6 @@ import './App.css';
 import { Carousel } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import NewYork from './NewYork.jpg';
 const City = ({ data }) => {
     return (
         <div className="container c-carousel-location">
