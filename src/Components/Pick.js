@@ -1,64 +1,50 @@
-import { useEffect, useRef, useState } from 'react'
-import { DateRange } from 'react-date-range'
-import {FaCalendarAlt} from 'react-icons/fa'
-import format from 'date-fns/format'
-import { addDays } from 'date-fns'
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
+import { useEffect, useRef, useState } from 'react';
+import { DateRange } from 'react-date-range';
+import { FaCalendarAlt } from 'react-icons/fa';
+import format from 'date-fns/format';
+import { addDays } from 'date-fns';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import './App.css';
 
 const DateRangeComp = () => {
-
-  // date state
   const [range, setRange] = useState([
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),
       key: 'selection'
     }
-  ])
+  ]);
 
-  // open close
-  const [open, setOpen] = useState(false)
-
-  // get the target element to toggle 
-  const refOne = useRef(null)
+  const [open, setOpen] = useState(false);
+  const refOne = useRef(null);
 
   useEffect(() => {
-    // event listeners
-    document.addEventListener("keydown", hideOnEscape, true)
-    document.addEventListener("click", hideOnClickOutside, true)
-  }, [])
+    const hideOnEscape = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    const hideOnClickOutside = (e) => {
+      if (refOne.current && !refOne.current.contains(e.target)) setOpen(false);
+    };
 
-  // hide dropdown on ESC press
-  const hideOnEscape = (e) => {
-    // console.log(e.key)
-    if( e.key === "Escape" ) {
-      setOpen(false)
-    }
-  }
+    document.addEventListener("keydown", hideOnEscape, true);
+    document.addEventListener("click", hideOnClickOutside, true);
 
-  // Hide on outside click
-  const hideOnClickOutside = (e) => {
-    // console.log(refOne.current)
-    // console.log(e.target)
-    if( refOne.current && !refOne.current.contains(e.target) ) {
-      setOpen(false)
-    }
-  }
+    return () => {
+      document.removeEventListener("keydown", hideOnEscape, true);
+      document.removeEventListener("click", hideOnClickOutside, true);
+    };
+  }, []);
 
-    
-
-  return ( 
+  return (
     <div className="calendarWrap">
-    <div className='calendar-icon'><i class="fa-regular fa-calendar icon-s"></i></div>
+      <div className='calendar-icon'><FaCalendarAlt /></div>
       <input
         value={`${format(range[0].startDate, "MM/dd/yyyy")} to ${format(range[0].endDate, "MM/dd/yyyy")}`}
         readOnly
         className="inputBox input-styles"
-        onClick={ () => setOpen(open => !open) }
+        onClick={() => setOpen(open => !open)}
       />
-
       <div ref={refOne}>
         {open && 
           <DateRange
@@ -71,9 +57,9 @@ const DateRangeComp = () => {
             className="calendarElement"
           />
         }
-      </div>      
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default DateRangeComp
+export default DateRangeComp;
